@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -45,15 +46,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ensure.cs" />
-    <Compile Include="HttpClientExtensions.cs" />
-    <Compile Include="RequestSniffer.cs" />
+    <Compile Include="Resources\ResourceName.cs" />
+    <Compile Include="Utils\Ensure.cs" />
+    <Compile Include="Utils\HttpClientExtensions.cs" />
+    <Compile Include="Utils\RequestSniffer.cs" />
     <Compile Include="BambooClient.cs" />
-    <Compile Include="Link.cs" />
-    <Compile Include="Plan.cs" />
+    <Compile Include="Resources\Link.cs" />
+    <Compile Include="Resources\Plan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resource.cs" />
-    <Compile Include="Result.cs" />
+    <Compile Include="Resources\Resource.cs" />
+    <Compile Include="Resources\Result.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

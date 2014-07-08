@@ -3,6 +3,8 @@ using System.Linq;
 using System.Net.Cache;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using BambooRestClient.Resources;
+using BambooRestClient.Utils;
 
 namespace BambooRestClient
 {
@@ -33,9 +35,9 @@ namespace BambooRestClient
             return client.GetList<Resource>(root, result => result.resources.resource.ToString());
         }
 
-        public Resource GetResource(string name)
+        public Resource GetResource(ResourceName name)
         {
-            Ensure.NotNullOrEmpty(name, "name");
+            Ensure.NotNull(name, "name");
 
             return Ensure.OnlyOne(
 
@@ -47,7 +49,7 @@ namespace BambooRestClient
         public Result[] GetAllResults()
         {
             return client.GetList<Result>(
-                GetResource("result").Link,
+                GetResource(ResourceName.Result).Link,
                 response => response.results.result.ToString());
         }
 
@@ -64,7 +66,7 @@ namespace BambooRestClient
         public Plan[] GetAllPlans()
         {
             return client.GetList<Plan>(
-                GetResource("plan").Link,
+                GetResource(ResourceName.Plan).Link,
                 response => response.plans.plan.ToString());
         }
 
@@ -80,6 +82,11 @@ namespace BambooRestClient
                 "Multiple plans found for plan key: " + key).Link;
 
             return client.GetOne<Plan>(planLink);
+        }
+
+        public T Get<T>(Link link)
+        {
+            return client.GetOne<T>(link);
         }
 
         public void Dispose()

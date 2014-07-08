@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BambooRestClient
+namespace BambooRestClient.Utils
 {
     internal static class Ensure
     {

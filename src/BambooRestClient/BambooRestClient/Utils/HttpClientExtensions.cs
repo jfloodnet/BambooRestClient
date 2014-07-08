@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Net.Http;
+using BambooRestClient.Resources;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace BambooRestClient
+namespace BambooRestClient.Utils
 {
     internal static class HttpClientExtensions
     {

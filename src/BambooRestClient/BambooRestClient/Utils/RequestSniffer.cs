@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BambooRestClient
+namespace BambooRestClient.Utils
 {
     public class RequestSniffer : DelegatingHandler
     {
