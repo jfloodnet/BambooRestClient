@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ensure.cs" />
+    <Compile Include="HttpClientExtensions.cs" />
     <Compile Include="RequestSniffer.cs" />
     <Compile Include="BambooClient.cs" />
     <Compile Include="Link.cs" />

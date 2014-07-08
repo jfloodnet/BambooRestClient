@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Cache;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace BambooRestClient
 {
@@ -16,11 +13,13 @@ namespace BambooRestClient
 
         public BambooClient(string rootUrl)
         {
+            Ensure.NotNullOrEmpty(rootUrl, "rootUrl");
+
             this.root = new Uri(rootUrl);
             this.client = HttpClientFactory.Create(
                 new WebRequestHandler
                 {
-                    CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.CacheOnly)
+                    CachePolicy = new HttpRequestCachePolicy(HttpRequestCacheLevel.CacheIfAvailable)
                 },
                 new RequestSniffer()
                 );
@@ -29,88 +28,58 @@ namespace BambooRestClient
             this.client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public Resource[] GetAll()
+        public Resource[] GetAllResources()
         {
-            var response = client.GetStringAsync(root);
-            response.Wait();
-
-            dynamic result = JsonConvert.DeserializeObject<JObject>(response.Result);
-
-            return JsonConvert.DeserializeObject<Resource[]>(result.resources.resource.ToString());
+            return client.GetList<Resource>(root, result => result.resources.resource.ToString());
         }
 
         public Resource GetResource(string name)
         {
-            return ExpectOne(GetAll().Where(x => x.Name.Equals(name)),
+            Ensure.NotNullOrEmpty(name, "name");
+
+            return Ensure.OnlyOne(
+
+                GetAllResources().Where(x => x.Name.Equals(name)),
                 "No resource found for name: " + name,
                 "Multiple resources found for name:" + name);
         }
 
         public Result[] GetAllResults()
         {
-            return GetList<Result>(
+            return client.GetList<Result>(
                 GetResource("result").Link,
                 response => response.results.result.ToString());
         }
 
         public Result GetLatestResultForPlan(string planKey)
         {
-            return ExpectOne(GetAllResults().Where(result => result.IsFor(planKey)),
+            Ensure.NotNullOrEmpty(planKey, "planKey");
+
+            return Ensure.OnlyOne(
+                GetAllResults().Where(result => result.IsFor(planKey)),
                 "No results found for plan key: " + planKey,
                 "Multiple results found for plan key: " + planKey);
         }
 
         public Plan[] GetAllPlans()
         {
-            return GetList<Plan>(
+            return client.GetList<Plan>(
                 GetResource("plan").Link,
                 response => response.plans.plan.ToString());
         }
 
         public Plan GetPlan(string key)
         {
-            var planLink = ExpectOne(
+            Ensure.NotNullOrEmpty(key, "key");
+
+            var planLink = Ensure.OnlyOne(
 
                 GetAllPlans().Where(x => x.Key.Equals(key)),
 
                 "No plans found for key: " + key,
                 "Multiple plans found for plan key: " + key).Link;
 
-            return GetOne<Plan>(planLink);
-        }
-
-        private T[] GetList<T>(Link link, Func<dynamic, string> fieldAccessor)
-        {
-            var response = client.GetStringAsync(link.Href);
-            response.Wait();
-
-            dynamic result = JsonConvert.DeserializeObject<JObject>(response.Result);
-
-            return JsonConvert.DeserializeObject<T[]>(fieldAccessor(result));
-        }
-
-        private T GetOne<T>(Link link)
-        {
-            var response = client.GetStringAsync(link.Href);
-            response.Wait();
-
-            dynamic result = JsonConvert.DeserializeObject<JObject>(response.Result);
-
-            return JsonConvert.DeserializeObject<T>(result.ToString());
-        }
-
-        public T ExpectOne<T>(IEnumerable<T> array, string zeroMessage, string multipleMessage)
-        {
-            if (!array.Any())
-            {
-                throw new Exception(zeroMessage);
-            }
-            if (array.Count() > 1)
-            {
-                throw new Exception(multipleMessage);
-            }
-
-            return array.Single();
+            return client.GetOne<Plan>(planLink);
         }
 
         public void Dispose()

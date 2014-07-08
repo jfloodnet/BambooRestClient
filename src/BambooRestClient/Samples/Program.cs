@@ -13,6 +13,7 @@ namespace Samples
         {
             using (var client = new BambooClient("http://tools-bamboo:8085/rest/api/latest/"))
             {
+                var resources = client.GetAll();
                 var plan = client.GetPlan("QUOTE-CI");
             }
         }
