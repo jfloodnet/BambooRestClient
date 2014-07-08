@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BambooRestClient", "BambooRestClient\BambooRestClient.csproj", "{FBD6A3B4-E4D3-4868-9039-5C2CEB9DC1C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples", "Samples\Samples.csproj", "{061AA0A0-CD62-4F14-9836-C5AC3EF3B90F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{FBD6A3B4-E4D3-4868-9039-5C2CEB9DC1C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FBD6A3B4-E4D3-4868-9039-5C2CEB9DC1C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FBD6A3B4-E4D3-4868-9039-5C2CEB9DC1C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{061AA0A0-CD62-4F14-9836-C5AC3EF3B90F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{061AA0A0-CD62-4F14-9836-C5AC3EF3B90F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{061AA0A0-CD62-4F14-9836-C5AC3EF3B90F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{061AA0A0-CD62-4F14-9836-C5AC3EF3B90F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,19 +4,17 @@ using System.Linq;
 using System.Net.Cache;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Threading;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace BambooRestClient
 {
-    public class Bamboo
+    public class BambooClient : IDisposable
     {
         private readonly Uri root;
         private readonly HttpClient client;
 
-        public Bamboo(string rootUrl)
+        public BambooClient(string rootUrl)
         {
             this.root = new Uri(rootUrl);
             this.client = HttpClientFactory.Create(
@@ -51,8 +49,8 @@ namespace BambooRestClient
         public Result[] GetAllResults()
         {
             return GetList<Result>(
-                    GetResource("result").Link,
-                    response => response.results.result.ToString());
+                GetResource("result").Link,
+                response => response.results.result.ToString());
         }
 
         public Result GetLatestResultForPlan(string planKey)
@@ -65,13 +63,15 @@ namespace BambooRestClient
         public Plan[] GetAllPlans()
         {
             return GetList<Plan>(
-                    GetResource("plan").Link,
-                    response => response.plans.plan.ToString());
+                GetResource("plan").Link,
+                response => response.plans.plan.ToString());
         }
 
         public Plan GetPlan(string key)
         {
-            var planLink = ExpectOne(GetAllPlans().Where(x => x.Key.Equals(key)),
+            var planLink = ExpectOne(
+
+                GetAllPlans().Where(x => x.Key.Equals(key)),
 
                 "No plans found for key: " + key,
                 "Multiple plans found for plan key: " + key).Link;
@@ -112,14 +112,10 @@ namespace BambooRestClient
 
             return array.Single();
         }
-    }
 
-    public class RequestSniffer : DelegatingHandler
-    {
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        public void Dispose()
         {
-            Console.WriteLine(request.RequestUri);
-            return base.SendAsync(request, cancellationToken);
+            this.client.Dispose();
         }
     }
 }
